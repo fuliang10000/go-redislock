@@ -19,17 +19,19 @@ package main
 import (
     "fmt"
     "time"
+    "context"
     "github.com/go-redis/redis/v8"
 	redislock "github.com/fuliang10000/go-redislock"
 )
 
 func main() {
-    // 获取一个单例客户端
-	client := redislock.Instance(&redis.Options{
+	var opt = &redis.Options{
 		Addr:     "localhost:6379",
-		Password: "",
+		Password: "a123456",
 		DB:       0,
-	})
+	}
+    // 获取一个单例客户端
+	client := redislock.Instance(context.Background(), redis.NewClient(opt))
 
 	lockKey := "my_lock_key"
 	// 获取锁

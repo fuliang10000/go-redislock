@@ -1,6 +1,7 @@
 package go_redislock
 
 import (
+	"context"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -15,21 +16,21 @@ var opt = &redis.Options{
 
 var lockKey = "test"
 
-func TestLock_fail(t *testing.T) {
-	client := Instance(opt)
-	locked := client.Lock(lockKey, 10*time.Second)
-	assert.True(t, locked)
-	unLock := client.Lock(lockKey, 10*time.Second)
-	assert.False(t, unLock)
-	client.UnLock(lockKey)
-}
-
 func TestLock_success(t *testing.T) {
-	client := Instance(opt)
+	client := Instance(context.Background(), redis.NewClient(opt))
 	locked := client.Lock(lockKey, 10*time.Second)
 	assert.True(t, locked)
 	client.UnLock(lockKey)
 	locked = client.Lock(lockKey, 10*time.Second)
 	assert.True(t, locked)
+	client.UnLock(lockKey)
+}
+
+func TestLock_fail(t *testing.T) {
+	client := Instance(context.Background(), redis.NewClient(opt))
+	locked := client.Lock(lockKey, 10*time.Second)
+	assert.True(t, locked)
+	unLock := client.Lock(lockKey, 10*time.Second)
+	assert.False(t, unLock)
 	client.UnLock(lockKey)
 }

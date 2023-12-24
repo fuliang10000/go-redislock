@@ -13,14 +13,17 @@ var (
 )
 
 type Singleton struct {
-	*redis.Client
+	Ctx    context.Context
+	Client *redis.Client
+	mu     sync.Mutex
 }
 
-// Instance 获取redis客户端
-func Instance(opt *redis.Options) *Singleton {
+// Instance 获取单例客户端
+func Instance(ctx context.Context, client *redis.Client) *Singleton {
 	once.Do(func() {
 		instance = &Singleton{
-			redis.NewClient(opt),
+			Ctx:    ctx,
+			Client: client,
 		}
 	})
 	return instance
@@ -28,8 +31,9 @@ func Instance(opt *redis.Options) *Singleton {
 
 // Lock 获取锁
 func (s *Singleton) Lock(lockKey string, expiration time.Duration) bool {
-	ctx := context.Background()
-	result, err := s.Client.SetNX(ctx, lockKey, "locked", expiration).Result()
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	result, err := s.Client.SetNX(s.Ctx, lockKey, "locked", expiration).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -38,6 +42,7 @@ func (s *Singleton) Lock(lockKey string, expiration time.Duration) bool {
 
 // UnLock 释放锁
 func (s *Singleton) UnLock(lockKey string) {
-	ctx := context.Background()
-	s.Client.Del(ctx, lockKey)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Client.Del(s.Ctx, lockKey)
 }

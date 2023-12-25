@@ -16,6 +16,11 @@
 go get -u github.com/fuliang10000/go-redislock
 ```
 
+### 测试
+```bash
+go test github.com/fuliang10000/go-redislock  -v -cover
+```
+
 ### Use Demo
 ```go
 package main

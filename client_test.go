@@ -17,6 +17,7 @@ var opt = &redis.Options{
 
 var lockKey = "test"
 
+// TestLock_success 期望获取锁成功
 func TestLock_success(t *testing.T) {
 	client := Instance(context.Background(), redis.NewClient(opt))
 	var wg sync.WaitGroup
@@ -24,18 +25,20 @@ func TestLock_success(t *testing.T) {
 	var locked bool
 	go func() {
 		defer wg.Done()
+		defer client.UnLock(lockKey)
 		locked = client.Lock(lockKey, 10*time.Second)
-		client.UnLock(lockKey)
 	}()
 	go func() {
+		time.Sleep(50 * time.Millisecond)
 		defer wg.Done()
+		defer client.UnLock(lockKey)
 		locked = client.Lock(lockKey, 10*time.Second)
-		client.UnLock(lockKey)
 	}()
 	wg.Wait()
 	assert.True(t, locked)
 }
 
+// TestLock_fail 期望获取锁失败
 func TestLock_fail(t *testing.T) {
 	client := Instance(context.Background(), redis.NewClient(opt))
 	var wg sync.WaitGroup
@@ -43,15 +46,15 @@ func TestLock_fail(t *testing.T) {
 	var locked bool
 	go func() {
 		defer wg.Done()
+		defer client.UnLock(lockKey)
 		locked = client.Lock(lockKey, 10*time.Second)
 		time.Sleep(50 * time.Millisecond)
-		client.UnLock(lockKey)
 	}()
 	go func() {
 		defer wg.Done()
+		defer client.UnLock(lockKey)
 		time.Sleep(10 * time.Millisecond)
 		locked = client.Lock(lockKey, 10*time.Second)
-		client.UnLock(lockKey)
 	}()
 	wg.Wait()
 	assert.False(t, locked)

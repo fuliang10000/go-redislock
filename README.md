@@ -1,9 +1,13 @@
 # go-redislock
 
 [![Go](https://img.shields.io/badge/Go->=1.21-green)](https://go.dev)
+[![Release](https://img.shields.io/github/v/release/fuliang10000/go-redislock.svg)](https://github.com/fuliang10000/go-redislock/releases)
+[![Report](https://goreportcard.com/badge/github.com/fuliang10000/go-redislock)](https://goreportcard.com/report/github.com/fuliang10000/go-redislock)
+[![Doc](https://img.shields.io/badge/go.dev-reference-brightgreen?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/fuliang10000/go-redislock)
+[![License](https://img.shields.io/github/license/fuliang10000/go-redislock)](https://github.com/fuliang10000/go-redislock/blob/main/LICENSE)
 
 ## 介绍
-使用go编写的基于Redis实现的分布式锁，lockClient是单例模式，避免资源浪费，锁的操作是线程安全的
+> 使用go编写的基于Redis实现的分布式锁，lockClient是单例模式，避免资源浪费，锁的操作是线程安全的
 
 ## 快速开始
 

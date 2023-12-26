@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/github/license/fuliang10000/go-redislock)](https://github.com/fuliang10000/go-redislock/blob/main/LICENSE)
 
 ## 介绍
-> 使用go编写的基于Redis实现的分布式锁，lockClient是单例模式，避免资源浪费，锁的操作是线程安全的
+> 使用go编写的基于Redis实现的分布式锁
 
 ## 快速开始
 
@@ -39,8 +39,8 @@ func main() {
 		Password: "a123456",
 		DB:       0,
 	}
-	// 获取一个单例客户端
-	client := redisLock.Instance(context.Background(), redis.NewClient(opt))
+	// 获取客户端
+	client := redisLock.NewClient(context.Background(), redis.NewClient(opt))
 
 	lockKey := "my_lock_key"
 	// 获取锁
@@ -54,5 +54,4 @@ func main() {
 		panic("system is busy")
 	}
 }
-
 ```

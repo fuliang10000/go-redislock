@@ -7,33 +7,25 @@ import (
 	"time"
 )
 
-var (
-	instance *Singleton
-	once     sync.Once
-)
-
-type Singleton struct {
-	Ctx    context.Context
-	Client *redis.Client
-	mu     sync.Mutex
+type Client struct {
+	Ctx   context.Context
+	redis *redis.Client
+	mu    sync.Mutex
 }
 
-// Instance 获取单例客户端
-func Instance(ctx context.Context, client *redis.Client) *Singleton {
-	once.Do(func() {
-		instance = &Singleton{
-			Ctx:    ctx,
-			Client: client,
-		}
-	})
-	return instance
+// NewClient 获取客户端
+func NewClient(ctx context.Context, redis *redis.Client) *Client {
+	return &Client{
+		Ctx:   ctx,
+		redis: redis,
+	}
 }
 
 // Lock 获取锁
-func (s *Singleton) Lock(lockKey string, expiration time.Duration) bool {
+func (s *Client) Lock(lockKey string, expiration time.Duration) bool {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	result, err := s.Client.SetNX(s.Ctx, lockKey, "locked", expiration).Result()
+	result, err := s.redis.SetNX(s.Ctx, lockKey, "locked", expiration).Result()
 	if err != nil {
 		panic(err)
 	}
@@ -41,8 +33,8 @@ func (s *Singleton) Lock(lockKey string, expiration time.Duration) bool {
 }
 
 // UnLock 释放锁
-func (s *Singleton) UnLock(lockKey string) {
+func (s *Client) UnLock(lockKey string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	s.Client.Del(s.Ctx, lockKey)
+	s.redis.Del(s.Ctx, lockKey)
 }

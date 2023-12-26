@@ -19,7 +19,7 @@ var lockKey = "test"
 
 // TestLock_success 期望获取锁成功
 func TestLock_success(t *testing.T) {
-	client := Instance(context.Background(), redis.NewClient(opt))
+	client := NewClient(context.Background(), redis.NewClient(opt))
 	var wg sync.WaitGroup
 	wg.Add(2)
 	var locked bool
@@ -40,7 +40,7 @@ func TestLock_success(t *testing.T) {
 
 // TestLock_fail 期望获取锁失败
 func TestLock_fail(t *testing.T) {
-	client := Instance(context.Background(), redis.NewClient(opt))
+	client := NewClient(context.Background(), redis.NewClient(opt))
 	var wg sync.WaitGroup
 	wg.Add(2)
 	var locked bool

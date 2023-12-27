@@ -5,6 +5,9 @@
 [![Report](https://goreportcard.com/badge/github.com/fuliang10000/go-redislock)](https://goreportcard.com/report/github.com/fuliang10000/go-redislock)
 [![Doc](https://img.shields.io/badge/go.dev-reference-brightgreen?logo=go&logoColor=white&style=flat)](https://pkg.go.dev/github.com/fuliang10000/go-redislock)
 [![License](https://img.shields.io/github/license/fuliang10000/go-redislock)](https://github.com/fuliang10000/go-redislock/blob/main/LICENSE)
+[![Issues](https://img.shields.io/github/issues/fuliang10000/go-redislock?style=flat-square)](https://github.com/fuliang10000/go-redislock/issues)
+[![Forks](https://img.shields.io/github/forks/fuliang10000/go-redislock?style=flat-square)](https://github.com/fuliang10000/go-redislock/network)
+[![Stars](https://img.shields.io/github/stars/fuliang10000/go-redislock?style=flat-square)]()
 
 ## 介绍
 > 使用go编写的基于Redis实现的分布式锁
